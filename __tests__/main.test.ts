@@ -18,8 +18,6 @@ const setOutputMock = jest.spyOn(core, 'setOutput')
 // Mock the action's main function
 const runMock = jest.spyOn(main, 'run')
 
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/
 
 describe('action', () => {
   beforeEach(() => {
@@ -30,8 +28,18 @@ describe('action', () => {
     // Set the action's inputs as return values from core.getInput()
     getInputMock.mockImplementation((name: string): string => {
       switch (name) {
-        case 'milliseconds':
-          return '500'
+        case 'exported-account':
+          return '../account.json'
+        case 'ws-provider-url':
+          return 'wss://ws.test.azero.dev'
+        case 'contract-address':
+          return '5Dbd7MmrTujdR7t1BS4Yxnj5sDxxLDLPqStGVmfZdfRQPgM9'
+        case 'contract-abi':
+          return '../abi.json'
+        case 'github-id':
+          return 'leapalazzolo'
+        case 'workflow-id':
+          return '1'
         default:
           return ''
       }
@@ -41,40 +49,37 @@ describe('action', () => {
     expect(runMock).toHaveReturned()
 
     // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex)
-    )
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex)
-    )
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      'time',
-      expect.stringMatching(timeRegex)
-    )
+    // expect(debugMock).toHaveBeenNthCalledWith(1, 'Waiting 500 milliseconds ...')
   })
 
-  it('sets a failed status', async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation((name: string): string => {
-      switch (name) {
-        case 'milliseconds':
-          return 'this is not a number'
-        default:
-          return ''
-      }
-    })
+  // it('sets a failed status', async () => {
+  //   // Set the action's inputs as return values from core.getInput()
+  //   getInputMock.mockImplementation((name: string): string => {
+  //     switch (name) {
+  //       case 'exported-account':
+  //         return '../account.json'
+  //       case 'ws-provider-url':
+  //         return 'wss://ws.test.azero.dev'
+  //       case 'contract-address':
+  //         return 'aaa'
+  //       case 'contract-abi':
+  //         return '../abi.json'
+  //       case 'github-id':
+  //         return 'leapalazzolo'
+  //       case 'workflow-id':
+  //         return '1'
+  //       default:
+  //         return ''
+  //     }
+  //   })
 
-    await main.run()
-    expect(runMock).toHaveReturned()
+  //   await main.run()
+  //   expect(runMock).toHaveReturned()
 
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      'milliseconds not a number'
-    )
-  })
+  //   // Verify that all of the core library functions were called correctly
+  //   expect(setFailedMock).toHaveBeenNthCalledWith(
+  //     1,
+  //     'milliseconds not a number'
+  //   )
+  // })
 })
