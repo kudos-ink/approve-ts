@@ -1,8 +1,7 @@
 import * as core from '@actions/core'
 import { Abi, ContractPromise } from '@polkadot/api-contract'
-import { ApiPromise, WsProvider } from '@polkadot/api';
-import { Keyring } from '@polkadot/api';
-import { cryptoWaitReady } from '@polkadot/util-crypto';
+import { ApiPromise, WsProvider, Keyring } from '@polkadot/api'
+import { cryptoWaitReady } from '@polkadot/util-crypto'
 
 /**
  * The main function for the action.
@@ -17,37 +16,42 @@ export async function run(): Promise<void> {
     const contributionId: number = +core.getInput('contribution-id')
     const contributorIdentity: number = +core.getInput('contributor-identity')
 
-    await cryptoWaitReady();
+    await cryptoWaitReady()
     // Create a keyring instance
-    const keyring = new Keyring({ type: 'sr25519' });
+    const keyring = new Keyring({ type: 'sr25519' })
 
     // Add an account, straight mnemonic
-    const account = keyring.addFromMnemonic(mnemonicPhrase);
+    const account = keyring.addFromMnemonic(mnemonicPhrase)
     // fix
-    const gasLimit = 3000n * 1000000n;
-    const storageDepositLimit = null;
+    const gasLimit = 3000n * 1000000n
+    const storageDepositLimit = null
 
     // Construct API provider
-    const wsProvider = new WsProvider(wsProviderUrl);
-    const api = await ApiPromise.create({ provider: wsProvider });
-    await api.isReady;
+    const wsProvider = new WsProvider(wsProviderUrl)
+    const api = await ApiPromise.create({ provider: wsProvider })
+    await api.isReady
 
-    const abi = new Abi(JSON.parse(contractAbi), api.registry.getChainProperties())
+    const abi = new Abi(
+      JSON.parse(contractAbi),
+      api.registry.getChainProperties()
+    )
 
     const contract = new ContractPromise(api, abi, contractAddress)
 
     await contract.tx
-      .approve({ storageDepositLimit, gasLimit },
-        contributionId, contributorIdentity
+      .approve(
+        { storageDepositLimit, gasLimit },
+        contributionId,
+        contributorIdentity
       )
       .signAndSend(account, result => {
         if (result.status.isFinalized) {
-          core.setOutput('hash', result.txHash.toHuman());
+          core.setOutput('hash', result.txHash.toHuman())
         }
-      });
+      })
   } catch (error) {
     // Fail the workflow run if an error occurs
-    console.log(error);
+    console.log(error)
     if (error instanceof Error) core.setFailed(error.message)
   }
 }
