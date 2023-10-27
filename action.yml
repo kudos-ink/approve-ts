@@ -1,18 +1,32 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'proof-of-work-submitter'
+description: 'Submits a proof of work to the contract'
+author: 'kudos.ink'
 
 # Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  ws-provider-url:
+    description: 'node url'
     required: true
-    default: '1000'
+  mnemonic-phrase:
+    description: 'seed phrase'
+    required: true
+  contract-address:
+    description: 'address of the contract'
+    required: true
+  contract-abi:
+    description: 'abi of the contract'
+    required: true
+  contribution-id:
+    description: 'id of the contribution'
+    required: true
+  contributor-identity:
+    description: 'identity of the contributor'
+    required: true
 
 # Define your outputs here.
 outputs:
-  time:
-    description: 'Your output description here'
+  hash:
+    description: 'Transaction hash'
 
 runs:
   using: node20

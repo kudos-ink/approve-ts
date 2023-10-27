@@ -104,3 +104,5 @@ __tests__/runner/*
 
 account.json
 abi.json
+src/test.ts
+src/test.cjs
