@@ -1,3 +1,8 @@
+# Approve-ts
+
+This is a custom action needed to use our **Kudos ink!** workflow so that the work done by the contributor is registered automatically in the smart contract and then the contributor can claim it.
+
+
 # Create a JavaScript Action Using TypeScript
 
 [![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
